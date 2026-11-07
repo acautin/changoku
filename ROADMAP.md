@@ -61,6 +61,8 @@ Keeps Changoku **100% static, $0/month, and zero-ops** while supporting daily fa
   - Tracks solve time (`⏱️`), active streak (`🔥 Racha`), and hints used, generating aspoiler-free summary ready to paste into the family WhatsApp chat (`📲 Compartir`).
 - [x] **Installable Offline PWA ([`manifest.json`](manifest.json) + Service Worker [`sw.js`](sw.js) + [`icon.svg`](icon.svg))**
   - Supports *"Add to Home Screen" / "Agregar a la pantalla de inicio"* on iOS and Android so Changoku installs with its own home-screen icon, launches full-screen without browser chrome, and works 100% offline.
+- [x] **GitHub Pages Static Deployment**
+  - Live at **[https://acautin.github.io/changoku/](https://acautin.github.io/changoku/)** with zero hosting cost and zero maintenance.
 
 ---
 

@@ -1,5 +1,10 @@
 # Changoku Labs • Study Games, Technique Visualizer & Combinatorics
 
+> 🚀 **Live Web App & Offline PWA**: **[https://acautin.github.io/changoku/](https://acautin.github.io/changoku/)**
+> - 🇨🇱 **Español (Chile)**: [`https://acautin.github.io/changoku/?lang=es`](https://acautin.github.io/changoku/?lang=es)
+> - 🇬🇧 **English**: [`https://acautin.github.io/changoku/?lang=en`](https://acautin.github.io/changoku/?lang=en)
+> - 📱 **Install on Mobile (100% Offline PWA)**: Open the link in Safari (iOS) or Chrome (Android) and tap **Share $\rightarrow$ Add to Home Screen** (*Agregar a la pantalla de inicio*) to install **Changoku** as a full-screen offline app.
+
 An interactive, zero-dependency modern JavaScript Sudoku application and study lab by **Changoku Labs**, featuring:
 
 1. **Interactive Play & Study Board**: Full 9×9 gameplay with candidate pencil notes, smart peer note auto-clean, auto-candidate calculation, completed digit counter & dimming, real-time conflict checking, "Check Errors" validation, step-by-step logical hints, undo/redo, `localStorage` auto-save, and puzzle import/export with solver diagnostics.
