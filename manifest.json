@@ -1,0 +1,20 @@
+{
+  "name": "Changoku Labs — Sudoku & Visualizer",
+  "short_name": "Changoku",
+  "description": "Zero-dependency Sudoku study game, 11-technique visualizer, daily challenge, and combinatorics explorer by Changoku Labs.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f8fafc",
+  "theme_color": "#4f46e5",
+  "lang": "es-CL",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

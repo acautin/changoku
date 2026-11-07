@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4f46e5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Changoku">
+  <title>Changoku Labs • Study Games, Technique Visualizer & Combinatorics</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top App Header -->
+  <header>
+    <div class="header-container">
+      <div class="brand-row">
+        <div class="brand">
+          <div class="brand-icon">9</div>
+          <div>
+            <h1 id="brand-title">Changoku <span>Labs</span></h1>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="btn-theme-toggle" class="btn lang-toggle-btn" title="Modo Día / Noche">
+            ☀️ Día
+          </button>
+          <button id="btn-lang-toggle" class="btn lang-toggle-btn" title="Cambiar idioma / Switch language">
+            🇨🇱 ES
+          </button>
+        </div>
+      </div>
+
+      <nav class="tabs-nav">
+        <button class="tab-btn active" data-tab="tab-play">
+          <span>🎮</span> Play & Study
+        </button>
+        <button class="tab-btn" data-tab="tab-visualizer">
+          <span>🔍</span> Technique Visualizer
+        </button>
+        <button class="tab-btn" data-tab="tab-theory">
+          <span>📐</span> Combinatorics & Theory
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Areas -->
+  <main>
+
+    <!-- TAB 1: Play & Study Board -->
+    <div id="tab-play" class="tab-pane active">
+      <div class="game-container">
+        
+        <!-- Board Column -->
+        <div class="board-wrapper">
+          <div id="play-board" class="sudoku-board"></div>
+
+          <!-- Keypad and Action Buttons -->
+          <div class="keypad-container">
+            <div class="digit-row">
+              <button class="keypad-btn" data-num="1">1</button>
+              <button class="keypad-btn" data-num="2">2</button>
+              <button class="keypad-btn" data-num="3">3</button>
+              <button class="keypad-btn" data-num="4">4</button>
+              <button class="keypad-btn" data-num="5">5</button>
+              <button class="keypad-btn" data-num="6">6</button>
+              <button class="keypad-btn" data-num="7">7</button>
+              <button class="keypad-btn" data-num="8">8</button>
+              <button class="keypad-btn" data-num="9">9</button>
+            </div>
+
+            <div class="action-row">
+              <button id="btn-erase" class="btn">⌫ Erase</button>
+              <button id="btn-note-mode" class="btn btn-toggle">✎ Pencil Notes</button>
+              <button id="btn-auto-cand" class="btn btn-toggle">⚡ Auto-Pencil</button>
+              <button id="btn-hint" class="btn btn-primary">💡 Hint</button>
+              <button id="btn-check-errors" class="btn">🔍 Check Errors</button>
+              <button id="btn-undo" class="btn">↩ Undo</button>
+              <button id="btn-redo" class="btn">↪ Redo</button>
+              <button id="btn-solve" class="btn">✓ Solve</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls Column -->
+        <div class="controls-panel">
+          
+          <!-- Generator Card -->
+          <div class="panel-card">
+            <div class="daily-challenge-box">
+              <div class="daily-header-row">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <strong id="daily-title-text" style="font-size: 0.92rem;">📅 Desafío Diario</strong>
+                  <span id="daily-day-badge" class="tech-badge">Hoy</span>
+                </div>
+                <span id="daily-streak-badge" class="streak-badge" title="Racha de días seguidos / Daily Streak">🔥 0</span>
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+                <button id="btn-daily-challenge" class="btn btn-daily" style="flex: 1;">📅 Jugar Desafío de Hoy</button>
+                <button id="btn-share-result" class="btn btn-whatsapp" style="display: none;">📲 Compartir</button>
+              </div>
+            </div>
+
+            <h3 id="generator-card-title" style="margin-top: 14px;">🎲 Generator (On-The-Fly)</h3>
+            <div class="difficulty-group">
+              <button class="diff-btn" data-diff="easy">Easy</button>
+              <button class="diff-btn active" data-diff="medium">Medium</button>
+              <button class="diff-btn" data-diff="hard">Hard</button>
+              <button class="diff-btn" data-diff="expert">Expert</button>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button id="btn-new-game" class="btn btn-primary" style="flex: 1;">New Game</button>
+              <button id="btn-custom-board" class="btn">Import</button>
+              <button id="btn-export-board" class="btn">Export / Debug</button>
+            </div>
+          </div>
+
+          <!-- Live Hint & Status Card -->
+          <div class="panel-card">
+            <h3 id="status-card-title">ℹ️ Board Status</h3>
+            <div id="board-stats" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px;">
+              Filled: 32/81 • Conflicts: 0
+            </div>
+            <div id="hint-banner" class="hint-banner">
+              Click <strong>"💡 Hint"</strong> to detect the next logical deduction step, or enable <strong>"⚡ Auto-Pencil"</strong> to display all candidate pencil marks.
+            </div>
+          </div>
+
+          <!-- Shortcuts & Guide Card -->
+          <div class="panel-card">
+            <h3 id="controls-card-title">⌨️ Keyboard Controls</h3>
+            <ul id="controls-guide-list" style="list-style: none; font-size: 0.85rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 6px;">
+              <li>• <strong>1 - 9</strong>: Place digit or note</li>
+              <li>• <strong>Backspace / Delete</strong>: Clear cell</li>
+              <li>• <strong>Arrow Keys</strong>: Navigate grid</li>
+              <li>• <strong>N</strong>: Toggle Pencil note mode</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 2: Technique Visualizer -->
+    <div id="tab-visualizer" class="tab-pane">
+      <div class="visualizer-layout">
+        
+        <!-- Technique Nav Sidebar -->
+        <aside class="technique-nav">
+          <div id="vis-group-basic" class="tech-group-title">Basic Deductions</div>
+          <button class="tech-list-btn" data-tech-id="naked_single">
+            Naked Single <span class="tech-badge">Basic</span>
+          </button>
+          <button class="tech-list-btn" data-tech-id="hidden_single">
+            Hidden Single <span class="tech-badge">Basic</span>
+          </button>
+
+          <div id="vis-group-intersections" class="tech-group-title">Intersections</div>
+          <button class="tech-list-btn" data-tech-id="pointing_pair">
+            Pointing Candidates <span class="tech-badge">Medium</span>
+          </button>
+          <button class="tech-list-btn" data-tech-id="box_line_reduction">
+            Box-Line Reduction <span class="tech-badge">Medium</span>
+          </button>
+
+          <div id="vis-group-subsets" class="tech-group-title">Subsets</div>
+          <button class="tech-list-btn" data-tech-id="naked_pair">
+            Naked Pair <span class="tech-badge">Medium</span>
+          </button>
+          <button class="tech-list-btn" data-tech-id="hidden_pair">
+            Hidden Pair <span class="tech-badge">Medium</span>
+          </button>
+          <button class="tech-list-btn" data-tech-id="naked_triple">
+            Naked Triple <span class="tech-badge">Hard</span>
+          </button>
+          <button class="tech-list-btn" data-tech-id="hidden_triple">
+            Hidden Triple <span class="tech-badge">Hard</span>
+          </button>
+
+          <div id="vis-group-fish" class="tech-group-title">Fish Techniques</div>
+          <button class="tech-list-btn active" data-tech-id="x_wing">
+            X-Wing <span class="tech-badge">Hard</span>
+          </button>
+          <button class="tech-list-btn" data-tech-id="swordfish">
+            Swordfish <span class="tech-badge">Master</span>
+          </button>
+
+          <div id="vis-group-wings" class="tech-group-title">Wing Patterns</div>
+          <button class="tech-list-btn" data-tech-id="xy_wing">
+            XY-Wing (Y-Wing) <span class="tech-badge">Master</span>
+          </button>
+        </aside>
+
+        <!-- Visualizer Interactive Board & Explainer -->
+        <div class="visualizer-main">
+          
+          <div class="board-wrapper">
+            <div id="visualizer-board" class="sudoku-board"></div>
+            
+            <div class="tech-legend">
+              <div class="legend-item"><div class="legend-color primary"></div> <span id="legend-base">Base Cells</span></div>
+              <div class="legend-item"><div class="legend-color pivot"></div> <span id="legend-pivot">Pivot</span></div>
+              <div class="legend-item"><div class="legend-color wing"></div> <span id="legend-wing">Wings</span></div>
+              <div class="legend-item"><div class="legend-color target"></div> <span id="legend-target">Affected Peers</span></div>
+              <div class="legend-item"><div class="legend-color elim"></div> <span id="legend-elim">Eliminated Candidate</span></div>
+            </div>
+          </div>
+
+          <!-- Explainer Details Card -->
+          <div class="technique-explainer">
+            <div class="tech-header">
+              <h2 id="tech-title">X-Wing</h2>
+              <div id="tech-diff-badge" class="tech-badge" style="display: inline-block; margin-top: 6px;">
+                Fish • Hard
+              </div>
+            </div>
+
+            <div class="tech-rule-box">
+              <strong id="label-core-rule">Core Rule:</strong> <span id="tech-rule"></span>
+            </div>
+
+            <div class="tech-step-details">
+              <strong id="label-deduction-step">Deduction Step:</strong>
+              <p id="tech-description" style="margin-top: 6px;"></p>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+              <button id="tech-apply-btn" class="btn btn-primary">Apply Deduction</button>
+              <button id="tech-reset-btn" class="btn">Reset Scenario</button>
+              <button id="tech-transfer-btn" class="btn">Transfer to Play Board ↗</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 3: Combinatorics & Theory -->
+    <div id="tab-theory" class="tab-pane">
+      <div class="theory-container">
+
+        <div class="theory-hero">
+          <h2 id="theory-hero-title">Sudoku Mathematics, Complexity & Combinatorics</h2>
+          <p id="theory-hero-subtitle">Answering foundational questions on game theory, state spaces, algorithmic generation, and computational limits.</p>
+        </div>
+
+        <!-- Question 1: Is Sudoku a solved game? -->
+        <div class="qa-card">
+          <h3 id="theory-q1-title">1. Is Sudoku a Solved Game?</h3>
+          <p id="theory-q1-intro">
+            In game theory and mathematics, whether a game is "solved" depends on the definition used:
+          </p>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-val">6.67 × 10²¹</div>
+              <div id="theory-stat-1-label" class="stat-label">Total Valid 9×9 Grids</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">5,472,730,538</div>
+              <div id="theory-stat-2-label" class="stat-label">Essentially Unique Grids</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">17</div>
+              <div id="theory-stat-3-label" class="stat-label">Minimum Clues for Uniqueness</div>
+            </div>
+            <div class="stat-box">
+              <div id="theory-stat-4-val" class="stat-val">NP-Complete</div>
+              <div id="theory-stat-4-label" class="stat-label">Complexity for N×N Boards</div>
+            </div>
+          </div>
+
+          <p id="theory-q1-p1">
+            • <strong>For standard 9×9 Sudoku:</strong> Yes, it is exhaustively analyzed and computationally solved. In 2005, Bertram Felgenhauer and Frazer Jarvis proved the exact number of valid filled $9 \times 9$ Sudoku grids is <strong>6,670,903,752,021,072,936,960</strong>. Taking into account all symmetries (rotations, reflections, permutations of rows/columns within bands, and digit relabeling), Ed Russell and Frazer Jarvis proved there are exactly <strong>5,472,730,538</strong> essentially different equivalence classes.
+          </p>
+          <p id="theory-q1-p2">
+            • <strong>The 17-Clue Minimum Proof:</strong> In January 2012, Gary McGuire, Bastian Tugemann, and Gilles Civario proved via an exhaustive 7.1 million CPU-hour supercomputer search that <em>no 16-clue Sudoku can ever have a unique solution</em>. Standard Sudoku requires a mathematical minimum of <strong>17 clues</strong>.
+          </p>
+          <p id="theory-q1-p3">
+            • <strong>For generalized N×N Sudoku (n² × n²):</strong> Determining whether an arbitrary puzzle has a valid solution is <strong>NP-complete</strong> (proved by Takayuki Yato and Takahiro Seta, 2003). While computers solve $9 \times 9$ boards in under a millisecond using backtracking or Donald Knuth's Dancing Links (Algorithm X), scaling the grid to $100 \times 100$ quickly becomes intractable in the worst case.
+          </p>
+
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+            <button id="load-17-clue-btn" class="btn btn-primary">🎮 Load Gary McGuire's 17-Clue Puzzle into Play Board</button>
+            <button id="verify-17-clue-btn" class="btn">⚡ Verify 17-Clue Uniqueness Speed</button>
+          </div>
+          <div id="verify-17-output" style="margin-top: 8px; font-size: 0.88rem; color: var(--accent);"></div>
+        </div>
+
+        <!-- Question 2: Can we generate all combinations? -->
+        <div class="qa-card">
+          <h3 id="theory-q2-title">2. Can We Generate All Combinations?</h3>
+          <p id="theory-q2-intro">
+            It depends on whether you mean <strong>completed grids</strong> or <strong>partial clue puzzles</strong>:
+          </p>
+          <p id="theory-q2-p1">
+            • <strong>All 6.67 × 10²¹ Raw Grids:</strong> Sequential output of all raw grids is practically impossible due to cosmic time scales. Even if a computer generated 1 billion grids per second without pausing, it would take <strong>211,000 years</strong> to output all $6.67 \times 10^{21}$ grids. Storing them in raw uncompressed text would require roughly <strong>540,000 exabytes</strong> of storage!
+          </p>
+          <p id="theory-q2-p2">
+            • <strong>All 5.47 Billion Symmetry Equivalence Classes:</strong> <strong>Yes!</strong> This has been done. The 5,472,730,538 fundamental classes have been completely catalogued and indexed by mathematicians into compressed databases of roughly 40 to 60 gigabytes.
+          </p>
+          <p id="theory-q2-p3">
+            • <strong>All Valid Puzzles (Starting Clue Layouts):</strong> The space of all partial configurations is roughly $3^{81} \approx 4.4 \times 10^{38}$. Even filtering only for those with a single unique solution leaves an estimated $10^{30}$ to $10^{35}$ valid puzzles. Storing all of them is physically impossible—which is why modern software generates them <em>procedurally on demand</em>!
+          </p>
+        </div>
+
+        <!-- Question 3: Possible on the fly or designed? -->
+        <div class="qa-card">
+          <h3 id="theory-q3-title">3. Are Puzzles Generated On-The-Fly or Handcrafted?</h3>
+          <p id="theory-q3-intro">
+            <strong>Almost all modern Sudoku puzzles are generated 100% on the fly!</strong>
+          </p>
+          <p id="theory-q3-p1">
+            Here is the exact 4-stage algorithm used by modern game engines (and running directly in this app):
+          </p>
+
+          <div id="theory-code-flow" class="code-flow">
+1. FULL GRID GENERATION:
+   Start with an empty 9×9 board.
+   Fill cells using randomized backtracking with constraint propagation (MRV heuristic).
+   Takes: ~1 to 3 milliseconds.
+
+2. SYMMETRIC HOLE DIGGING:
+   Group cells into 180° rotationally symmetric pairs: (r, c) and (8-r, 8-c).
+   Shuffle the pairs into random order.
+   For each pair:
+     Temporarily clear both cells.
+     Check uniqueness: countSolutions(board, limit=2) === 1.
+     If still strictly unique: keep cells cleared!
+     If ambiguous (>1 solutions): rollback and restore numbers!
+
+3. DIFFICULTY TARGETING:
+   Continue digging until clue target is reached:
+   Easy (35-40 clues) • Medium (29-34 clues) • Hard (25-28 clues) • Expert (21-24 clues).
+
+4. LOGICAL DEDUCTION GRADING:
+   Run a human-style solver (Singles → Pairs → Intersections → X-Wings → Wings).
+   Grade the puzzle's difficulty based on the hardest technique required to solve it without guessing!
+          </div>
+
+          <p id="theory-q3-p2">
+            <strong>Why did people design them by hand?</strong> In the 1980s and 1990s, the Japanese publisher <em>Nikoli</em> (led by Maki Kaji) popularized handcrafted Sudokus. Nikoli's human designers treated puzzle creation as an art form, insisting that every puzzle have aesthetic 180° rotational symmetry, beautiful clue patterns, and elegant logical step transitions without trial-and-error guessing. Today, procedural computer algorithms can enforce those same aesthetic and logical constraints automatically in just a few milliseconds.
+          </p>
+
+          <!-- Live Benchmark Card -->
+          <div class="benchmark-card">
+            <h4 id="theory-bench-title" style="color: #fff; margin-bottom: 8px;">⚡ Live In-Browser Generator Benchmark</h4>
+            <p id="theory-bench-desc" style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 12px;">
+              Click below to benchmark the engine directly in your browser. It will generate 5 brand-new, mathematically unique Sudokus with 180° rotational symmetry and measure execution times live:
+            </p>
+            <button id="run-bench-btn" class="btn btn-primary">Run Live Generation Benchmark</button>
+            <div id="bench-output" class="benchmark-results">Click "Run Live Generation Benchmark" to test generator performance...</div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Export / Debug Modal -->
+  <div id="export-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-thin); padding-bottom: 10px;">
+        <h3 id="modal-title-text" style="display: flex; align-items: center; gap: 8px; font-size: 1.15rem; color: var(--accent);">
+          📋 Export & Board Debug Info
+        </h3>
+        <button id="modal-close-btn" class="btn" style="padding: 4px 10px; font-size: 1rem;">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; font-size: 0.88rem;">
+        <div>
+          <label id="modal-initial-label" style="font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 4px;">
+            Initial Puzzle (81-char string):
+          </label>
+          <div style="display: flex; gap: 8px;">
+            <input id="export-initial-str" type="text" readonly style="flex: 1; background: var(--bg-primary); border: 1px solid var(--border-thin); color: var(--text-primary); padding: 8px 10px; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.82rem;">
+            <button id="copy-initial-btn" class="btn">Copy</button>
+          </div>
+        </div>
+
+        <div>
+          <label id="modal-current-label" style="font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 4px;">
+            Current Board State (with your entries):
+          </label>
+          <div style="display: flex; gap: 8px;">
+            <input id="export-current-str" type="text" readonly style="flex: 1; background: var(--bg-primary); border: 1px solid var(--border-thin); color: var(--text-primary); padding: 8px 10px; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.82rem;">
+            <button id="copy-current-btn" class="btn">Copy</button>
+          </div>
+        </div>
+
+        <div>
+          <label id="modal-diag-label" style="font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 4px;">
+            Solver Diagnostics:
+          </label>
+          <div id="export-debug-details" style="background: var(--bg-primary); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-thin); font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.6; color: #38bdf8; white-space: pre-wrap;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Entry Script (ES Module) -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

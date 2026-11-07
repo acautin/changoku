@@ -1,0 +1,26 @@
+{
+  "name": "changoku",
+  "version": "1.1.0",
+  "description": "Changoku — Interactive Sudoku study game, technique visualizer, on-the-fly puzzle generator, and combinatorial theory explorer.",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 3000",
+    "test": "node tests/test-engine.js",
+    "test:e2e": "npx playwright test",
+    "build": "node scripts/bundle.js --lang=es",
+    "build:es": "node scripts/bundle.js --lang=es",
+    "build:en": "node scripts/bundle.js --lang=en"
+  },
+  "keywords": [
+    "sudoku",
+    "techniques",
+    "visualizer",
+    "puzzle-generator",
+    "combinatorics"
+  ],
+  "author": "Changoku Labs",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@playwright/test": "^1.65.0"
+  }
+}
